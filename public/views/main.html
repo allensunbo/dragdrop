@@ -1,0 +1,45 @@
+<style>
+    div.drop {
+        min-width: 200px;
+        min-height: 80px;
+        border: 1px solid #aaaaaa;
+        width: 600px;
+        height: 400px;
+    }
+
+    div.dragged {
+        cursor: pointer;
+        width: 280px;
+        height: 80px;
+    }
+
+    td {
+        width: 60px;
+        height: 60px;
+        border-spacing: 2px;
+    }
+
+</style>
+
+<!-- list -->
+<div>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="p in list">
+            <div id={{p.id}} jp-draggable jp-isdraggable="true" jp-dragstart="OnDragStart(event)"
+                 class="dragged">
+                <i class="fa fa-arrows"></i> {{p.title}}
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!-- drop area -->
+<span>Drop here: </span>
+
+<div jp-draggable jp-drop="OnDrop(event)" jp-dragover="OnDragOver(event)" class="drop">
+    <table border="1" id="container">
+        <tr ng-repeat="p in test track by $index">
+            <td ng-repeat="q in test[$index]" class="cell empty" id="{{$index+10*$parent.$index}}">{{q}}</td>
+        </tr>
+    </table>
+</div>

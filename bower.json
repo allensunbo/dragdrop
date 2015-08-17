@@ -1,0 +1,27 @@
+{
+  "name": "checkbox date picker",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "angular-bootstrap": "~0.13.1",
+    "font-awesome": "~4.4.0",
+    "angular-route": "~1.4.3",
+    "lodash": "~3.10.1",
+    "angular-sanitize": "~1.4.3",
+    "angular-dialog-service": "~5.2.8",
+    "angular-gridster": "~0.13.5",
+    "angular-ui-grid": "~3.0.3",
+    "angular-dragdrop": "~1.0.11",
+    "highcharts-ng": "~0.0.8",
+    "jquery.shapeshift": "~2.0.0",
+    "angular-shapeshift": "*"
+  }
+}
