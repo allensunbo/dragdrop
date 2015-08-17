@@ -3,8 +3,8 @@
         min-width: 200px;
         min-height: 80px;
         /* border: 1px solid #aaaaaa;*/
-        width: 640px;
-        height: 640px;
+        /* width: 640px;*/
+        /*height: 640px;*/
     }
 
     div.dragged {
@@ -14,10 +14,12 @@
     }
 
     td {
-        width: 64px;
-        height: 64px;
+        /* width: 64px;*/
+        /*  height: 64px;*/
         border-spacing: 0px;
-        padding: 2px;
+        /*padding: 2px;*/
+        overflow: auto;
+        /* display: inline-block;*/
     }
 
 </style>
@@ -28,7 +30,7 @@
         <li class="list-group-item" ng-repeat="p in list">
             <div id={{p.id}} jp-draggable jp-isdraggable="true" jp-dragstart="OnDragStart(event)"
                  class="dragged">
-                <i class="fa fa-arrows"></i> {{p.title}}
+                <i class="fa fa-arrows"></i> <img ng-src="{{p.src}}"/>
             </div>
         </li>
     </ul>
@@ -37,10 +39,15 @@
 <!-- drop area -->
 <span>Drop here: </span>
 
-<div jp-draggable jp-drop="OnDrop(event)" jp-dragover="OnDragOver(event)" class="drop">
-    <table border="0" id="container">
+<div jp-draggable jp-drop="OnDrop(event)" jp-dragover="OnDragOver(event)" class="drop"
+     style="width:{{tableWidth}}px;height:{{tableWidth}}px;">
+    <table border="1" id="container" style="table-layout:fixed">
         <tr ng-repeat="p in test track by $index">
-            <td ng-repeat="q in test[$index]" class="cell empty" id="{{$index+10*$parent.$index}}">{{q}}</td>
+            <td ng-repeat="q in test[$index]" class="cell empty" id="{{$index+colNum*$parent.$index}}"
+                width="{{cellWidth}}px" height="{{cellWidth}}px;"
+                style="padding:{{cellPadding}}px;">
+                {{q}}
+            </td>
         </tr>
     </table>
 </div>

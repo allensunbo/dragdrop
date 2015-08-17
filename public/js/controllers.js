@@ -4,26 +4,33 @@ angular.module('myApp.controllers', [])
 
   .controller('MainCtrl', function ($scope) {
 
+    var SIZE = 96;
+
+    $scope.colNum = 12;
+    $scope.tableWidth = $scope.colNum * SIZE;
+    $scope.cellWidth = SIZE;
+    $scope.cellPadding = 2;
+    $scope.contentWidth = $scope.cellWidth - 2 * $scope.cellPadding;
 
     $scope.list = [
       {
         id: 'a1',
-        title: 'John Doe'
+        src: 'http://placehold.it/350x150'
       },
       {
         id: 'a2',
-        title: 'Pablo De Jesus'
+        src: 'http://placehold.it/250x150'
       },
       {
         id: 'a3',
-        title: 'Hong Gil Dong'
+        src: 'http://placehold.it/550x150'
       }
     ];
 
     $scope.test = [];
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < $scope.colNum; i++) {
       var a = [];
-      for (var j = 0; j < 10; j++) {
+      for (var j = 0; j < $scope.colNum; j++) {
         a.push(i + ',' + j);
       }
       $scope.test.push(a);
@@ -53,11 +60,11 @@ angular.module('myApp.controllers', [])
 
       var x = container.getBoundingClientRect().left;
       var y = container.getBoundingClientRect().top;
-      var colIndex = ~~((evt.originalEvent.clientX - x) / 60) + 0;
-      var rowIndex = ~~((evt.originalEvent.clientY - y) / 60) + 0;
+      var colIndex = ~~((evt.originalEvent.clientX - x) / SIZE) + 0;
+      var rowIndex = ~~((evt.originalEvent.clientY - y) / SIZE) + 0;
 
-      console.log(colIndex + ',' + rowIndex);
-      var item = document.querySelectorAll('.cell')[colIndex + 10 * rowIndex];
+      console.log(rowIndex + ',' + colIndex);
+      var item = document.querySelectorAll('.cell')[colIndex + $scope.colNum * rowIndex];
       console.log('@' + item);
       console.log(item);
       var cell = document.createElement("td");
@@ -65,7 +72,7 @@ angular.module('myApp.controllers', [])
       att.value = "cell occupied";
       cell.setAttributeNode(att);
       att = document.createAttribute("id");
-      att.value = "" + (colIndex + 10 * rowIndex);
+      att.value = "" + (colIndex + $scope.colNum * rowIndex);
       cell.setAttributeNode(att);
 
       cell.appendChild(document.getElementById($scope.dataid));
@@ -81,8 +88,8 @@ angular.module('myApp.controllers', [])
 
       //angular.element('#' + $scope.dataid).css('left', (evt.originalEvent.clientX - $scope.rx ) + 'px');
       //angular.element('#' + $scope.dataid).css('top', (evt.originalEvent.clientY - $scope.ry ) + 'px');
-      angular.element('#' + $scope.dataid).css('width', '60px');
-      angular.element('#' + $scope.dataid).css('height', '60px');
+      angular.element('#' + $scope.dataid).css('width', $scope.contentWidth + 'px');
+      angular.element('#' + $scope.dataid).css('height', $scope.contentWidth + 'px');
 
       // snap to grid
 
