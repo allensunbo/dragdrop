@@ -40,14 +40,21 @@ angular.module('myApp.controllers', [])
     $scope.dataid = 0;
 
     $scope.OnDragStart = function (evt) {
-
-      $scope.dataid = evt.target.id;
+      var parentDraggable = evt.target.parentNode;
+      while (parentDraggable) {
+        console.log(parentDraggable)
+        if (parentDraggable.hasAttribute('jp-draggable')) {
+          break;
+        }
+        parentDraggable = parentDraggable.parentNode;
+      }
+      $scope.dataid = parentDraggable.id;
       $scope.rx = evt.originalEvent.offsetX;
       $scope.ry = evt.originalEvent.offsetY;
-      console.log(evt)
+      console.log('start with:' + $scope.dataid)
 
       // for firefox
-      evt.dataTransfer.setData("text", evt.target.id);
+      evt.dataTransfer.setData("text", $scope.dataid);
     };
 
     $scope.OnDragOver = function (evt) {
@@ -56,10 +63,13 @@ angular.module('myApp.controllers', [])
 
     $scope.OnDrop = function (evt) {
       evt.preventDefault();
+      console.log(evt);
+
       var container = document.getElementById('container');
 
       var x = container.getBoundingClientRect().left;
       var y = container.getBoundingClientRect().top;
+      console.log('x=' + x + ',y=' + y);
       var colIndex = ~~((evt.originalEvent.clientX - x) / SIZE) + 0;
       var rowIndex = ~~((evt.originalEvent.clientY - y) / SIZE) + 0;
 
@@ -75,8 +85,11 @@ angular.module('myApp.controllers', [])
       att.value = "" + (colIndex + $scope.colNum * rowIndex);
       cell.setAttributeNode(att);
 
+      console.log($scope.dataid)
+      console.log(document.getElementById($scope.dataid))
       cell.appendChild(document.getElementById($scope.dataid));
       item.parentNode.replaceChild(cell, item);
+
       var q = container.getBoundingClientRect();
       console.log(evt.target)
 
