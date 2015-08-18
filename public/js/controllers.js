@@ -56,6 +56,7 @@ angular.module('myApp.controllers', [])
     $scope.dataid = 0;
 
     $scope.OnDragStart = function (evt) {
+
       var parentDraggable = evt.target.parentNode;
       while (parentDraggable) {
         if (parentDraggable.hasAttribute('jp-draggable')) {
@@ -63,6 +64,7 @@ angular.module('myApp.controllers', [])
         }
         parentDraggable = parentDraggable.parentNode;
       }
+
       $scope.dataid = parentDraggable.id;
       $scope.rx = evt.originalEvent.offsetX;
       $scope.ry = evt.originalEvent.offsetY;
@@ -70,6 +72,8 @@ angular.module('myApp.controllers', [])
 
       // for firefox
       evt.dataTransfer.setData("text", $scope.dataid);
+
+
     };
 
     $scope.OnDragOver = function (evt) {
@@ -104,8 +108,8 @@ angular.module('myApp.controllers', [])
               elem.css('left', snapX + 'px');
               var snapY = layoutInfo.row * $scope.cellHeight;
               elem.css('top', snapY + 'px');
-              elem.css('width', layoutInfo.sizeX * $scope.contentWidth + 'px');
-              elem.css('height', layoutInfo.sizeY * $scope.contentHeight + 'px');
+              elem.css('width', (layoutInfo.sizeX * $scope.cellWidth ) + 'px');
+              elem.css('height', (layoutInfo.sizeY * $scope.cellHeight) + 'px');
               console.log('layoutInfo.sizeX, layoutInfo.sizeY')
               console.log(layoutInfo.sizeX, layoutInfo.sizeY)
             } else if ($scope.dataid === $scope.droppedItems[i]['id']) {
@@ -118,12 +122,18 @@ angular.module('myApp.controllers', [])
               console.log(layoutInfo)
             }
 
+
             // figure out proper padding
+            elem.css('padding', $scope.cellPadding + 'px');
+
             if (layoutInfo) {
-              elem.css('padding-left', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2 ) + 'px');
-              elem.css('padding-right', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2) + 'px');
-              elem.css('padding-top', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2 ) + 'px');
-              elem.css('padding-bottom', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2) + 'px');
+              /*elem.css('padding-left', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2 ) + 'px');
+               elem.css('padding-right', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2) + 'px');
+               elem.css('padding-top', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2 ) + 'px');
+               elem.css('padding-bottom', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2) + 'px');*/
+              //elem.css('padding',  $scope.padding + 'px');
+            } else {
+              //elem.css('padding',  $scope.padding + 'px');
             }
           }
         });

@@ -16,6 +16,7 @@
 
 </style>
 
+<button ng-click="showGridLines = !showGridLines">toggle grid lines</button>
 <!-- list -->
 <div class="pull-left" style="margin-left:-350px;width:300px;">
     <ul class="list-group">
@@ -35,8 +36,8 @@
 <div jp-draggable jp-drop="OnDrop(event)" jp-dragover="OnDragOver(event)" class="drop"
      style="width:{{tableWidth}}px;height:{{tableHeight}}px;border:1px dashed blue;position:relative;" id="container">
     <div ng-repeat="item in droppedItems" id="{{item.id}}" style="position:absolute;" jp-draggable jp-isdraggable="true"
-         jp-dragstart="OnDragStart(event)">
-        <img ng-src="{{item.src}}"/>
+         jp-dragstart="OnDragStart(event)" style="resize:both; overflow: auto;">
+        <img ng-src="{{item.src}}" style="width:100%;height:auto" />
     </div>
     <svg ng-attr-width="{{tableWidth}}" ng-attr-height="{{tableHeight}}" ng-show="showGridLines">
         <line ng-repeat="line in lines" ng-attr-x1="{{line.x1}}" ng-attr-y1="{{line.y1}}" ng-attr-x2="{{line.x2}}"
