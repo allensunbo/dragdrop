@@ -21,15 +21,23 @@ angular.module('myApp.controllers', [])
     $scope.list = [
       {
         id: 'a1',
-        src: 'http://placehold.it/350x150'
+        src: 'http://placehold.it/184x92'
       },
       {
         id: 'a2',
-        src: 'http://placehold.it/250x150'
+        src: 'http://placehold.it/92x92'
       },
       {
         id: 'a3',
-        src: 'http://placehold.it/550x150'
+        src: 'http://placehold.it/184x184'
+      },
+      {
+        id: 'a4',
+        src: 'http://placehold.it/276x184'
+      },
+      {
+        id: 'a5',
+        src: 'http://placehold.it/250x122'
       }
     ];
 
@@ -89,6 +97,7 @@ angular.module('myApp.controllers', [])
           for (var i = 0; i < $scope.droppedItems.length; i++) {
             console.log($scope.droppedItems[i])
             var elem = angular.element('#' + $scope.droppedItems[i]['id']);
+
             if (typeof elem.css('left') === 'undefined' || elem.css('left') === 'auto') {
               layoutInfo = getLayoutInfo(elem, evt, $scope);
               var snapX = layoutInfo.col * $scope.cellWidth;
@@ -97,12 +106,22 @@ angular.module('myApp.controllers', [])
               elem.css('top', snapY + 'px');
               elem.css('width', layoutInfo.sizeX * $scope.contentWidth + 'px');
               elem.css('height', layoutInfo.sizeY * $scope.contentHeight + 'px');
+              console.log('layoutInfo.sizeX, layoutInfo.sizeY')
+              console.log(layoutInfo.sizeX, layoutInfo.sizeY)
             } else if ($scope.dataid === $scope.droppedItems[i]['id']) {
               layoutInfo = getLayoutInfo(elem, evt, $scope);
               var snapX = layoutInfo.col * $scope.cellWidth;
               elem.css('left', snapX + 'px');
               var snapY = layoutInfo.row * $scope.cellHeight;
               elem.css('top', snapY + 'px');
+            }
+
+            // figure out proper padding
+            if (layoutInfo) {
+              elem.css('padding-left', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2 ) + 'px');
+              elem.css('padding-right', (layoutInfo.sizeX * ($scope.cellWidth - $scope.contentWidth) / 2) + 'px');
+              elem.css('padding-top', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2 ) + 'px');
+              elem.css('padding-bottom', (layoutInfo.sizeY * ($scope.cellHeight - $scope.contentHeight) / 2) + 'px');
             }
           }
         });
@@ -154,8 +173,8 @@ function getLayoutInfo(elem, evt, $scope) {
   // figure out how many grids needed
   var width = elem.css('width') ? elem.css('width').slice(0, -2) : ($scope.contentWidth); // -2: remove px suffix
   var height = elem.css('height') ? elem.css('height').slice(0, -2) : ($scope.contentHeight);// -2: remove px suffix
-  var sizeX = ~~(width / $scope.contentWidth) + 1;
-  var sizeY = ~~(height / $scope.contentHeight) + 1;
+  var sizeX = Math.ceil(width / $scope.contentWidth) + 0;
+  var sizeY = Math.ceil(height / $scope.contentHeight) + 0;
 
   return {
     sizeX: sizeX,
