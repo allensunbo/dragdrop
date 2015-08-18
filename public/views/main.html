@@ -9,17 +9,9 @@
 
     div.dragged {
         cursor: pointer;
-        width: 280px;
-        height: 80px;
-    }
-
-    td {
-        /* width: 64px;*/
-        /*  height: 64px;*/
-        border-spacing: 0px;
-        /*padding: 2px;*/
         overflow: auto;
-        /* display: inline-block;*/
+        /*    width: 280px;
+            height: 80px;*/
     }
 
 </style>
@@ -41,14 +33,20 @@
 <span>Drop here: </span>
 
 <div jp-draggable jp-drop="OnDrop(event)" jp-dragover="OnDragOver(event)" class="drop"
-     style="width:{{tableWidth}}px;height:{{tableWidth}}px;">
-    <table border="1" id="container" style="table-layout:fixed">
-        <tr ng-repeat="p in test track by $index">
-            <td ng-repeat="q in test[$index]" class="cell empty" id="{{$index+colNum*$parent.$index}}"
-                width="{{cellWidth}}px" height="{{cellWidth}}px;"
-                style="padding:{{cellPadding}}px;">
-                {{q}}
-            </td>
-        </tr>
-    </table>
+     style="width:{{tableWidth}}px;height:{{tableHeight}}px;border:1px dashed blue;position:relative;" id="container">
+    <div></div>
+    <div ng-repeat="item in droppedItems" id="{{item.id}}" style="position:absolute;" jp-draggable jp-isdraggable="true"
+         jp-dragstart="OnDragStart(event)">
+        <img ng-src="{{item.src}}"/>
+    </div>
+    <svg ng-attr-width="{{tableWidth}}" ng-attr-height="{{tableHeight}}">
+        <line ng-repeat="line in lines" ng-attr-x1="{{line.x1}}" ng-attr-y1="{{line.y1}}" ng-attr-x2="{{line.x2}}"
+              ng-attr-y2="{{line.y2}}"
+              style="stroke:rgb(0,0,255);stroke-width:1" stroke-dasharray="1, 4"/>
+        <line ng-repeat="line2 in lines2" ng-attr-x1="{{line2.x1}}" ng-attr-y1="{{line2.y1}}" ng-attr-x2="{{line2.x2}}"
+              ng-attr-y2="{{line2.y2}}"
+              style="stroke:rgb(0,0,255);stroke-width:1" stroke-dasharray="1, 4"/>
+    </svg>
+
+
 </div>

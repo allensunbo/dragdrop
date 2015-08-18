@@ -2,15 +2,20 @@
 
 angular.module('myApp.controllers', [])
 
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', function ($scope, $timeout) {
 
     var SIZE = 96;
 
     $scope.colNum = 12;
     $scope.tableWidth = $scope.colNum * SIZE;
+    $scope.tableHeight = $scope.colNum * SIZE;
     $scope.cellWidth = SIZE;
+    $scope.cellHeight = SIZE;
     $scope.cellPadding = 2;
     $scope.contentWidth = $scope.cellWidth - 2 * $scope.cellPadding;
+    $scope.contentHeight = $scope.cellHeight - 2 * $scope.cellPadding;
+
+    $scope.droppedItems = [];
 
     $scope.list = [
       {
@@ -35,6 +40,16 @@ angular.module('myApp.controllers', [])
       }
       $scope.test.push(a);
     }
+
+    var lines = [], lines2 = [];
+    for (var i = 1; i < $scope.colNum; i++) {
+      lines.push({x1: 0, y1: i * $scope.cellHeight, x2: $scope.tableWidth, y2: i * $scope.cellHeight});
+    }
+    $scope.lines = lines;
+    for (var i = 1; i < $scope.colNum; i++) {
+      lines2.push({y1: 0, x1: i * $scope.cellWidth, y2: $scope.tableWidth, x2: i * $scope.cellWidth});
+    }
+    $scope.lines2 = lines2;
 
     // Drag and drop section
     $scope.dataid = 0;
@@ -65,49 +80,72 @@ angular.module('myApp.controllers', [])
       evt.preventDefault();
       console.log(evt);
 
-      var container = document.getElementById('container');
-
-      var x = container.getBoundingClientRect().left;
-      var y = container.getBoundingClientRect().top;
-      console.log('x=' + x + ',y=' + y);
-      var colIndex = ~~((evt.originalEvent.clientX - x) / SIZE) + 0;
-      var rowIndex = ~~((evt.originalEvent.clientY - y) / SIZE) + 0;
-
-      console.log(rowIndex + ',' + colIndex);
-      var item = document.querySelectorAll('.cell')[colIndex + $scope.colNum * rowIndex];
-      console.log('@' + item);
-      console.log(item);
-      var cell = document.createElement("td");
-      var att = document.createAttribute("class");
-      att.value = "cell occupied";
-      cell.setAttributeNode(att);
-      att = document.createAttribute("id");
-      att.value = "" + (colIndex + $scope.colNum * rowIndex);
-      cell.setAttributeNode(att);
-
-      console.log($scope.dataid)
-      console.log(document.getElementById($scope.dataid))
-      cell.appendChild(document.getElementById($scope.dataid));
-      item.parentNode.replaceChild(cell, item);
-
-      var q = container.getBoundingClientRect();
-      console.log(evt.target)
-
-      angular.element('#' + $scope.dataid).css('border', '1px solid red');
-      // angular.element('#' + $scope.dataid).css('position', 'absolute');
-      // var p = evt.target.getBoundingClientRect();
-      // var last  = document.getElementById('container').lastChild;
-      // console.log(last);
-
-      //angular.element('#' + $scope.dataid).css('left', (evt.originalEvent.clientX - $scope.rx ) + 'px');
-      //angular.element('#' + $scope.dataid).css('top', (evt.originalEvent.clientY - $scope.ry ) + 'px');
-      angular.element('#' + $scope.dataid).css('width', $scope.contentWidth + 'px');
-      angular.element('#' + $scope.dataid).css('height', $scope.contentWidth + 'px');
-
-      // snap to grid
+      for (var i = 0; i < $scope.list.length; i++) {
+        if ($scope.list[i].id === $scope.dataid) {
+          break;
+        }
+      }
+      if (i < $scope.list.length) {
+        var clone = angular.copy($scope.list[i], {});
+        clone.id = clone.id + '-dropped';
+        $scope.droppedItems.push(clone);
+      }
 
 
+      $scope.$apply(function () {
+        $timeout(function () {
+          for (var i = 0; i < $scope.droppedItems.length; i++) {
+            console.log($scope.droppedItems[i])
+            var elem = angular.element('#' + $scope.droppedItems[i]['id']);
+            if (typeof elem.css('left') === 'undefined' || elem.css('left') === 'auto') {
+              var sizeInfo = getSize(elem, evt, $scope);
+              console.log(sizeInfo)
+              var snapX = sizeInfo.col * $scope.cellWidth;
+              elem.css('left', snapX + 'px');
+              var snapY = sizeInfo.row * $scope.cellHeight;
+              elem.css('top', snapY + 'px');
+              console.log(snapX, snapY)
+              elem.css('width', sizeInfo.sizeX * $scope.contentWidth + 'px');
+              elem.css('height', sizeInfo.sizeY * $scope.contentHeight + 'px');
+            } else {
+              var sizeInfo = getSize(elem, evt, $scope);
+              console.log(sizeInfo)
+              var snapX = sizeInfo.col * $scope.cellWidth;
+              elem.css('left', snapX + 'px');
+              var snapY = sizeInfo.row * $scope.cellHeight;
+              elem.css('top', snapY + 'px');
+              console.log(snapX, snapY)
+            }
+          }
+        });
+      });
+      return;
     };
 
 
   });
+
+function getSize(elem, evt, $scope) {
+  // snap to grid
+  var col = 0, row = 0;
+  col = ~~( (evt.originalEvent.offsetX - $scope.rx ) / $scope.cellWidth);
+  // var snapX = whichCol * $scope.cellWidth;
+  // angular.element('#' + $scope.dataid).css('left', snapX + 'px');
+  row = ~~( (evt.originalEvent.offsetY - $scope.ry ) / $scope.cellHeight);
+  // var snapY = whichRow * $scope.cellHeight;
+  // angular.element('#' + $scope.dataid).css('top', snapY + 'px');
+
+  // figure out how many grids needed
+  var width = elem.css('width') ? elem.css('width').slice(0, -2) : ($scope.contentWidth); // -2: remove px suffix
+  var height = elem.css('height') ? elem.css('height').slice(0, -2) : ($scope.contentHeight);// -2: remove px suffix
+  var sizeX = ~~(width / $scope.contentWidth) + 1;
+  var sizeY = ~~(height / $scope.contentHeight) + 1;
+  /*angular.element('#' + $scope.dataid).css('width', actualWidth * $scope.contentWidth + 'px');
+   angular.element('#' + $scope.dataid).css('height', actualHeight * $scope.contentHeight + 'px');*/
+  return {
+    sizeX: sizeX,
+    sizeY: sizeY,
+    col: col,
+    row: row
+  }
+}
