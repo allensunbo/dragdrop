@@ -14,7 +14,7 @@ angular.module('myApp.controllers', [])
     $scope.cellPadding = 2;
     $scope.contentWidth = $scope.cellWidth - 2 * $scope.cellPadding;
     $scope.contentHeight = $scope.cellHeight - 2 * $scope.cellPadding;
-    $scope.showGridLines = true;
+    $scope.showGridLines = false;
 
     $scope.droppedItems = [];
 
@@ -114,6 +114,8 @@ angular.module('myApp.controllers', [])
               elem.css('left', snapX + 'px');
               var snapY = layoutInfo.row * $scope.cellHeight;
               elem.css('top', snapY + 'px');
+              console.log('layoutInfo')
+              console.log(layoutInfo)
             }
 
             // figure out proper padding
@@ -155,7 +157,18 @@ function getLayoutInfo(elem, evt, $scope) {
     }
   } else {
     if (evt.target.id !== 'container') {
-      console.log('not in container')
+      console.log(evt);
+      console.log('not in container');
+      if (evt.target.hasAttribute('jp-draggable')) {
+        var dropTarget = evt.target;
+      } else {
+        // TODO find nearest parent which has attribute 'jp-draggable'
+        var dropTarget = evt.target.parentNode;
+      }
+      console.log(dropTarget);
+      console.log(angular.element(dropTarget).css('left'));
+      offSetX = parseInt(angular.element(dropTarget).css('left').slice(0, -2));
+      offSetY = parseInt(angular.element(dropTarget).css('top').slice(0, -2));
     } else {
       console.log('in container')
     }
