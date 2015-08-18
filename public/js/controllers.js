@@ -107,7 +107,7 @@ angular.module('myApp.controllers', [])
               console.log(snapX, snapY)
               elem.css('width', sizeInfo.sizeX * $scope.contentWidth + 'px');
               elem.css('height', sizeInfo.sizeY * $scope.contentHeight + 'px');
-            } else {
+            } else if ($scope.dataid === $scope.droppedItems[i]['id']) {
               var sizeInfo = getSize(elem, evt, $scope);
               console.log(sizeInfo)
               var snapX = sizeInfo.col * $scope.cellWidth;
